@@ -19,13 +19,20 @@ pub fn link_boot(_args: TokenStream, input: TokenStream) -> TokenStream {
                         #[unsafe(link_section = ".data.boot")]
                     });
                 }
+                syn::Item::Impl(v) => {
+                    v.attrs.push(parse_quote! {
+                        #[unsafe(link_section = ".text.boot")]
+                    });
+                }
                 _ => {}
             }
         }
     }
 
+    let items = input.content.unwrap().1;
+
     quote! {
-      #input
+      #(#items)*
     }
     .into()
 }
