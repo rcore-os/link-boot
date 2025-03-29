@@ -23,6 +23,14 @@ pub fn link_boot(_args: TokenStream, input: TokenStream) -> TokenStream {
                     v.attrs.push(parse_quote! {
                         #[unsafe(link_section = ".text.boot")]
                     });
+
+                    for item in v.items.iter_mut() {
+                        if let syn::ImplItem::Fn(v) = item {
+                            v.attrs.push(parse_quote! {
+                                #[unsafe(link_section = ".text.boot")]
+                            });
+                        }
+                    }
                 }
                 _ => {}
             }
